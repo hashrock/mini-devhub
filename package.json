@@ -1,0 +1,22 @@
+{
+  "name": "milkcocoa-vue-chat",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/hashrock-sandbox/vue-milkcocoa-chat.git"
+  },
+  "author": "",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/hashrock-sandbox/vue-milkcocoa-chat/issues"
+  },
+  "homepage": "https://github.com/hashrock-sandbox/vue-milkcocoa-chat",
+  "dependencies": {
+    "vue": "~0.11.5",
+    "jquery": "~2.1.3"  }
+}

@@ -2,94 +2,55 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title></title>
-    <style>
-        h1{
-            font-size: 2rem;
-            margin: 1rem;
-        }
-        input.title{
-            font-size: 2rem;
-            margin: 1rem;
-        }
-
-    </style>
+    <title>MiniHub</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
+    <link rel="stylesheet" href="index.css"/>
+    <link rel="stylesheet" href="lib/perfect-scrollbar.min.css"/>
 </head>
 <body>
-    <div id="main">
-        <h1 v-if="!isEditingTitle">{{title}}<button v-on="click: isEditingTitle = true">Edit</button></h1>
-        <div v-if="isEditingTitle"><input class="title" type="text" v-model="titleEdit" v-on="keyup:changeTitle(titleEdit) | key enter"/><button v-on="click: changeTitle(titleEdit)">OK</button></div>
-        user : <input type="text" v-model="user"/>
-        text : <input type="text" v-model="text" v-on="keyup:send | key enter"/>
-        <button v-on="click: send" v-attr="disabled: text.length === 0">Send</button>
-        <ul>
-            <li v-repeat="message: messages">
-                {{message.text}} - {{message.user}}
-            </li>
-        </ul>
+    <div id="main" class="wrapper">
+        <div class="panel-1">
+            <form class="pure-form chat-input">
+                <input type="text" v-model="text" v-on="keyup:send | key enter"/>
+                <button class="pure-button pure-button-primary" v-on="click: send" v-attr="disabled: text.length === 0">Say</button>
+            </form>
+
+                <div v-repeat="message: messages">
+                    <div class="message">
+                        <div class="message__user">{{message.user}}</div>
+                        <div class="message__text">{{message.text}}</div>
+                    </div>
+                </div>
+        </div>
+
+        <div class="panel-2">
+            <form class="pure-form" style="margin: 10px;">
+                <input type="text" class="pure-input-rounded">
+                <button type="submit" class="pure-button">Search</button>
+            </form>
+            <div style="margin: 10px;">
+                <a href="">All</a> > <a href="">Category</a> > <a href="">Search</a> > <a href="">is</a> > <a href="">WIP</a>
+            </div>
+
+            <div class="memo">
+                <h3>Category / test1</h3>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis, repellat sint. Ad consequuntur nostrum quasi sed, temporibus tenetur vero. Accusantium culpa dolores eum facere officia quidem reiciendis similique tenetur voluptatum.
+            </div>
+            <div class="memo">
+                <h3>Category / test2</h3>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis, repellat sint. Ad consequuntur nostrum quasi sed, temporibus tenetur vero. Accusantium culpa dolores eum facere officia quidem reiciendis similique tenetur voluptatum.
+            </div>
+            <div class="memo">
+                <h3>Category / test3</h3>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis, repellat sint. Ad consequuntur nostrum quasi sed, temporibus tenetur vero. Accusantium culpa dolores eum facere officia quidem reiciendis similique tenetur voluptatum.
+            </div>
+            <div class="memo">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis, repellat sint. Ad consequuntur nostrum quasi sed, temporibus tenetur vero. Accusantium culpa dolores eum facere officia quidem reiciendis similique tenetur voluptatum.
+            </div>
+        </div>
     </div>
     <script src="http://cdn.mlkcca.com/v0.2.8/milkcocoa.js"></script>
-    <script src="bower_components/vue/dist/vue.js"></script>
-    <script>
-        var milkcocoa = new MilkCocoa("https://io-qi68yo3tp.mlkcca.com:443");
-        var ds = milkcocoa.dataStore('chat');
-        var messageDs = ds.child('messages');
-
-        new Vue({
-            el: "#main",
-            data: {
-                messages:[],
-                user: "",
-                text: "",
-                title: "",
-                isEditingTitle: false
-            },
-            methods:{
-                send: function(){
-                    if(this.user.length === 0 || this.text.length === 0){
-                        return;
-                    }
-
-                    //pushすると、自分にもpushイベントが飛んでくる
-                    //すでにpushイベントに反応してviewが更新される（render）設定をしてあるので、
-                    //ここでviewの更新を行う必要はない。
-                    messageDs.push({user: this.user, text: this.text});
-                    this.text = "";
-                },
-                render: function(){
-                    var self = this;
-                    messageDs.query().sort('desc').limit(10).done(function(data){
-                        self.messages = data;
-                    });
-                },
-                changeTitle: function(title){
-                    this.isEditingTitle = false;
-                    ds.set("setting", {title: title});
-                }
-            },
-            ready: function(){
-                this.user = "user" + parseInt(Math.random() * 1000, 10);
-                this.render();
-
-                var self = this;
-                messageDs.on("push", function(){
-                    self.render();
-                });
-
-                ds.query().done(function(data){
-                    data.forEach(function(i){
-                        self.title = i.title;
-                        self.titleEdit = i.title;
-                    });
-                });
-
-                ds.on("set", function(event){
-                    self.title = event.value.title;
-                    self.titleEdit = event.value.title;
-                });
-            }
-        });
-    </script>
+    <script src="build/bundle.js"></script>
 
 </body>
 </html>
