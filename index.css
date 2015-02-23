@@ -45,7 +45,7 @@ body {
     justify-content: center;
     min-height: 0;
     overflow-y: scroll;
-    background: rgb(228, 228, 228);
+    background: rgb(231, 231, 231);
 }
 .chat-input{
     display: flex;
@@ -63,7 +63,7 @@ body {
 
 .memo {
     margin: 8px 0px 0px 8px;
-    padding: 10px;
+    padding: 30px;
     display: inline-block;
     min-height: 200px;
     width: 100%;
@@ -104,6 +104,11 @@ body {
     float: left;
     margin-left: 10px;
 }
+
+textarea{
+    font-family: monospace;
+}
+
 /* http://www.gajjartejas.in/2012/09/adding-google-like-modern-scroll-bar-to.html */
 ::-webkit-scrollbar{height:16px;overflow:visible;width:16px}
 ::-webkit-scrollbar-button{height:0;width:0}

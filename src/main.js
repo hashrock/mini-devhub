@@ -15,6 +15,30 @@ marked.setOptions({
     smartypants: false
 });
 
+//スラッシュ区切りの文字列をツリーに変換する
+function createCategoryTree(data){
+    var titleList = data.map(function(item){
+        var lines = item.text.split(/\r\n|\r|\n/);
+        if(lines.length > 0){
+            return lines[0];
+        }else{
+            return null;
+        }
+    });
+    var root = {};
+    titleList.forEach(function(item){
+        if(item.match("/")){
+            var parent = root;
+            item.split("/").forEach(function(tag){
+                if(parent && !parent[tag]){
+                    parent[tag] = {};
+                }
+                parent = parent[tag];
+            });
+        }
+    });
+    return root;
+}
 
 new Vue({
     el: "#main",
@@ -32,7 +56,8 @@ new Vue({
             id: ""
         },
         isEditing: false,
-        isEditingTitle: false
+        isEditingTitle: false,
+        category: ""
     },
     methods:{
         send: function(){
@@ -51,6 +76,11 @@ new Vue({
                 self.messages = data;
             });
             memoDs.query().sort('desc').limit(1000).done(function(data){
+                //カテゴリ生成
+                var categoryTree = createCategoryTree(data);
+                //TODO カテゴリ表示
+                //TODO 現在選択中カテゴリを元に絞込
+
                 self.memos = data;
             });
         },
@@ -95,9 +125,11 @@ new Vue({
         }
     },
     ready: function(){
+        //ユーザ名生成
         this.user = "user" + parseInt(Math.random() * 1000, 10);
         this.render();
 
+        //サーバイベントによる再レンダリング
         var self = this;
         messageDs.on("push", function(){
             self.render();
