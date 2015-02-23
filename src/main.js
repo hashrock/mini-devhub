@@ -50,13 +50,9 @@ new Vue({
             messageDs.query().sort('desc').limit(100).done(function(data){
                 self.messages = data;
             });
-            memoDs.query().sort('desc').limit(10).done(function(data){
+            memoDs.query().sort('desc').limit(1000).done(function(data){
                 self.memos = data;
             });
-        },
-        changeTitle: function(title){
-            this.isEditingTitle = false;
-            ds.set("setting", {title: title});
         },
         onEndEditing: function(){
             this.memo.text = "";
@@ -112,18 +108,5 @@ new Vue({
         memoDs.on("set", function(){
             self.render();
         });
-
-        ds.query().done(function(data){
-            data.forEach(function(i){
-                self.title = i.title;
-                self.titleEdit = i.title;
-            });
-        });
-
-        ds.on("set", function(event){
-            self.title = event.value.title;
-            self.titleEdit = event.value.title;
-        });
-
     }
 });
