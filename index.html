@@ -36,6 +36,7 @@
                 <div class="memo__actions">
                     <button v-if="memo.id === ''" v-on="click: updateMemo(memo)" v-attr="disabled: memo.text.length === 0" class="pure-button pure-button-primary memo__actions__update">Post</button>
                     <button v-if="memo.id !== ''" v-on="click: updateMemo(memo)" class="pure-button pure-button-primary memo__actions__update">Update</button>
+                    <button v-on="click: onEndEditing()" class="pure-button memo__actions__update">Cancel</button>
                 </div>
             </div>
 
