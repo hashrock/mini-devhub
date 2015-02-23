@@ -65,10 +65,30 @@ body {
     margin: 8px 0px 0px 8px;
     padding: 10px;
     display: inline-block;
-    height: 240px;
+    min-height: 200px;
+    width: 100%;
     vertical-align: top;
     background-color: #fff;
     box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.24);
+    position: relative;
+}
+.close-button{
+    position:absolute;
+    top:10px;
+    right:15px;
+    color: #8b8bff;
+}
+
+.memo__textarea{
+    margin: 8px 0px 0px 8px;
+    height: 240px;
+    width: 99%;
+}
+.memo__actions{
+    margin: 8px 0px 0px 8px;
+}
+.memo__actions__update{
+    width: 200px;
 }
 
 .message{

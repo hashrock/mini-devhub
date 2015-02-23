@@ -2,15 +2,36 @@ var Vue = require('vue');
 var milkcocoa = new MilkCocoa("https://io-qi68yo3tp.mlkcca.com:443");
 var ds = milkcocoa.dataStore('chat');
 var messageDs = ds.child('messages');
+var memoDs = ds.child('memos');
+var marked = require("marked");
+marked.setOptions({
+    renderer: new marked.Renderer(),
+    gfm: true,
+    tables: true,
+    breaks: true,
+    pedantic: false,
+    sanitize: true,
+    smartLists: true,
+    smartypants: false
+});
 
 
 new Vue({
     el: "#main",
+    filters: {
+        marked: marked
+    },
     data: {
         messages:[],
+        memos: [],
         user: "",
         text: "",
         title: "",
+        memo: {
+            text: "",
+            id: ""
+        },
+        isEditing: false,
         isEditingTitle: false
     },
     methods:{
@@ -29,10 +50,52 @@ new Vue({
             messageDs.query().sort('desc').limit(100).done(function(data){
                 self.messages = data;
             });
+            memoDs.query().sort('desc').limit(10).done(function(data){
+                self.memos = data;
+            });
         },
         changeTitle: function(title){
             this.isEditingTitle = false;
             ds.set("setting", {title: title});
+        },
+        onEndEditing: function(){
+            this.memo.text = "";
+            this.memo.id = "";
+            this.isEditing = false;
+        },
+        updateMemo: function(memo){
+            var self = this;
+            if(memo.id === undefined || memo.id === null || memo.id === ""){
+                memoDs.push(
+                    {
+                        title: memo.title,
+                        text: memo.text
+                    },function(){
+                        self.onEndEditing();
+                    });
+            }else{
+                memoDs.set(memo.id,
+                    {
+                        title: memo.title,
+                        text: memo.text
+                    }, function(){
+                        self.onEndEditing();
+                    });
+            }
+        },
+        removeMemo: function(id){
+            var self = this;
+            memoDs.remove(id, function(){
+                self.render();
+            });
+        },
+        editMemo: function(id){
+            var self = this;
+            memoDs.get(id, function(data){
+                self.isEditing = true;
+                self.memo.text = data.text;
+                self.memo.id = id;
+            });
         }
     },
     ready: function(){
@@ -41,6 +104,12 @@ new Vue({
 
         var self = this;
         messageDs.on("push", function(){
+            self.render();
+        });
+        memoDs.on("push", function(){
+            self.render();
+        });
+        memoDs.on("set", function(){
             self.render();
         });
 
