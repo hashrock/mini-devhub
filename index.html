@@ -15,7 +15,7 @@
                 <input type="text" v-model="text" v-on="keyup:send | key enter"/>
                 <button class="pure-button pure-button-primary" v-on="click: send" v-attr="disabled: text.length === 0">Say</button>
             </form>
-                <div v-repeat="message: messages">
+                <div v-repeat="message: model.messages">
                     <div class="message">
                         <div class="message__user">{{message.user}}</div>
                         <div class="message__text">{{message.text}}</div>
@@ -41,7 +41,7 @@
                 </div>
             </div>
 
-            <div class="memo" v-repeat="m: memos" v-on="dblclick: editMemo(m.id)">
+            <div class="memo" v-repeat="m: model.memos" v-on="dblclick: editMemo(m.id)">
                 <div class="close-button">
                     <span aria-hidden="true" class="icon-close" v-on="click: removeMemo(m.id)"></span>
                 </div>
